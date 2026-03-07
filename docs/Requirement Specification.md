@@ -1,58 +1,127 @@
-**Project Name:** BBC News AI Podcast Transformer
+# Requirement Specification
+## BBC News AI Podcast Transformer
 
-**Version:** 1.0 (Initial Draft)
+**Version:** 1.0  
+**Author:** vanpham
 
-**Developer:** vanpham
+---
 
-#### **1\. Tổng quan dự án (Project Overview)**
+# 1. Project Overview
 
-Hệ thống tự động hóa việc lấy tin tức từ BBC News, sử dụng AI để biên tập kịch bản, tạo file âm thanh podcast (5 phút) với nhạc nền phù hợp cảm xúc, và hiển thị lên website để người dùng nghe và tra cứu.
+The **BBC News AI Podcast Transformer** is a system that automatically collects news from BBC News, summarizes the content using AI, generates a short podcast script, converts the script into audio, and publishes the podcast on a website.
 
-#### **2\. Luồng tính năng chính (Core Features)**
+Each generated episode is approximately **5 minutes long**.
 
--   **Thu thập tin tức:** Tự động quét 5 bài báo chuyên sâu từ các chuyên mục cố định của BBC.
--   **Biên tập nội dung (AI Scripting):** \* Tóm tắt.
-    -   Tự động quyết định phong cách: Độc thoại (1 giọng) hoặc Đối thoại (2 giọng).
-    -   Thêm từ đệm tự nhiên, Intro/Outro cố định, trích dẫn nguồn bài báo.
--   **Sản xuất âm thanh (AI Audio):**
-    -   Chuyển đổi văn bản thành giọng nói (TTS).
-    -   **Sentiment Music:** Tự động phân tích cảm xúc kịch bản để lồng nhạc nền phù hợp (buồn, kịch tính, sôi động...).
--   **Website hiển thị:**
-    -   Giao diện đơn giản, danh sách podcast mới nhất ở trên đầu.
-    -   Cung cấp trình phát nhạc (Audio Player) và nút Tải về (Download).
-    -   Hiển thị link nguồn BBC.
-    -   Tính năng tìm kiếm các tập cũ dựa trên kịch bản lưu trữ.
+The final podcast episodes are hosted on a **GitHub Static Pages website**, where users can listen to the audio.
 
-#### **3\. Đặc tả kỹ thuật (Technical Stack)**
+---
 
--   **Ngôn ngữ chính:** Python.
--   **AI Engine:** openrouter API (Xử lý kịch bản & Phân tích cảm xúc).
--   **Âm thanh:** Thư viện Python (gTTS/Edge-TTS) + MoviePy (để trộn nhạc nền).
--   **Website:** Streamlit hoặc FastAPI (Ưu tiên Streamlit để làm Admin Dashboard nhanh).
--   **Lưu trữ (Storage):** Google Drive API (Tài khoản riêng).
--   **Cơ sở dữ liệu:** SQLite (Lưu thông tin kịch bản, link, metadata).
+# 2. System Pipeline
 
-#### **4\. Vận hành và Bảo trì (Ops & Maintenance)**
+The system processes data through the following steps:
 
--   **Lịch trình:** Tự động chạy lúc 06:00 sáng hàng ngày.
--   **Chính sách lưu trữ (Data Retention):**
-    -   File Audio (.mp3): Tự động xóa sau 1-2 tuần để tiết kiệm dung lượng Drive.
-    -   Kịch bản (Text): Lưu trữ vĩnh viễn trong database để tra cứu.
--   **Thông báo:** Gửi Email báo cáo tình trạng sau mỗi lần thực thi.
--   **Xử lý lỗi:** Nếu không có tin mới, hệ thống tự chọn các bài báo "Evergreen" (bất hủ) để sản xuất podcast thay thế.
--   **Nhật ký (Logging):** Lưu file log trên Google Drive để theo dõi lỗi.
+1. Fetch BBC News articles from RSS feed  
+2. Extract article content  
+3. Summarize articles using AI  
+4. Generate podcast script  
+5. Convert script to speech (TTS)  
+6. Add random background music  
+7. Export podcast audio (.mp3)  
+8. Save audio into repository  
+9. Update website episode list  
+10. Deploy to GitHub Pages  
 
-#### **5\. Trang quản trị (Admin Dashboard)**
+---
 
--   Giao diện đơn giản để chị có thể:
-    -   Bấm nút chạy hệ thống thủ công.
-    -   Xóa các tập podcast không mong muốn.
-    -   Xem lịch sử chạy và file log.
+# 3. Core Features
 
-\+ các tính năng optional: podcast dịch sang tiếng việt, nhạc cảm xúc
+## News Collection
 
-\+ nếu gặp khó khăn về kỹ thuật hoặc về cost thì có thể tạm cắt các tính năng nà
+The system collects **5 articles from the BBC News RSS feed** and extracts their main content.
 
-### **TL;DR (Tóm tắt nhanh)**
+---
 
-Hệ thống này giống như một tòa soạn báo mini: Python đi nhặt tin -> Gemini viết kịch bản -> AI đọc & lồng nhạc -> Đẩy lên Web Streamlit lưu trên Drive. Tự động xóa file nặng sau 2 tuần, giữ lại kịch bản để tìm kiếm.
+## AI Script Generation
+
+The system uses an AI model to:
+
+- summarize the collected articles  
+- generate a **short podcast script (~5 minutes)**
+
+The podcast is written as a **single-host monologue** with a simple structure:
+
+Intro → News summaries → Outro
+
+---
+
+## Audio Production
+
+The generated script is converted into speech using **Text-to-Speech (TTS)** tools such as:
+
+- Edge-TTS  
+- gTTS  
+
+The system then adds **random background music** and exports the final podcast as an **MP3 file**.
+
+---
+
+# 4. Technical Stack
+
+**Programming Language**
+
+- Python
+
+**AI Engine**
+
+- OpenRouter API (script generation and summarization)
+
+**Audio Processing**
+
+- Edge-TTS or gTTS  
+- MoviePy (audio mixing)
+
+**Website**
+
+- GitHub Static Pages
+
+**Storage**
+
+Podcast audio files are stored **directly in the repository**.
+
+No database is required.
+
+---
+
+# 5. System Execution
+
+The system can run in two ways.
+
+## Automatic Execution
+
+The pipeline runs automatically every day using a **GitHub Actions cron job**.
+
+Example schedule:
+
+06:00 every day
+
+---
+
+## Manual Execution
+
+The system can also be run manually:
+python run_pipeline.py
+
+This command triggers the full pipeline.
+
+---
+
+# 6. Summary
+
+The project demonstrates how AI can automate the process of turning written news articles into audio podcasts.
+
+The system combines:
+
+- news collection  
+- AI-generated scripts  
+- text-to-speech audio production  
+- automated website publishing
